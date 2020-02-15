@@ -74,23 +74,23 @@
             const model = tf.sequential();
             
             // YOUR CODE HERE
-            model.add(tf.layers.dense({inputShape: [numOfFeatures], activation: "relu", units: 32}))
+            model.add(tf.layers.dense({inputShape: [numOfFeatures], activation: "relu", units: 64}))
+            model.add(tf.layers.dense({activation: "relu", units: 32}))
             model.add(tf.layers.dense({activation: "relu", units: 16}))
             model.add(tf.layers.dense({activation: "relu", units: 8}))
-            model.add(tf.layers.dense({activation: "relu", units: 4}))
             model.add(tf.layers.dense({activation: "sigmoid", units: 1}))
             model.summary()
             
             // Compile the model using the binaryCrossentropy loss, 
             // the rmsprop optimizer, and accuracy for your metrics. 
-            model.compile({loss: "binaryCrossentropy", metrics: ["acc"], optimizer: tf.train.rmsprop(0.06)}) // YOUR CODE HERE);
+            model.compile({loss: "binaryCrossentropy", metrics: ["acc"], optimizer: 'adam'}) // YOUR CODE HERE);
             
             await model.fitDataset(convertedTrainingData, 
-                             {epochs:100,
+                             {epochs:4,
                               validationData: convertedTestingData,
                               callbacks:{
                                   onEpochEnd: async(epoch, logs) =>{
-                                      console.log("Epoch: " + epoch + " Loss: " + logs.loss + " Accuracy: " + logs.acc);
+                                      console.log("Epoch: " + epoch + " Loss: " + logs.loss + " Accuracy: " + logs.acc+ " Val Accuracy: " + logs.val_acc );
                                   }
                               }});
             await model.save('downloads://my_model');
